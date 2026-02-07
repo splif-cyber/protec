@@ -1,46 +1,50 @@
-from flask import Flask, request, jsonify, send_from_directory
+from flask import Flask, request, send_from_directory, jsonify
 from flask_cors import CORS
 from datetime import datetime
+import os
 
 app = Flask(__name__, static_folder=".")
 CORS(app)
 
-# Page login
+
+# Page principale
+@app.route("/")
+def index():
+    return send_from_directory(".", "login.html")
+
+
 @app.route("/login.html")
 def login():
     return send_from_directory(".", "login.html")
+
 
 @app.route("/success.html")
 def success():
     return send_from_directory(".", "success.html")
 
 
-# Dossiers statiques
-@app.route("/css/<path:filename>")
-def css_files(filename):
-    return send_from_directory("css", filename)
-
-@app.route("/js/<path:filename>")
-def js_files(filename):
-    return send_from_directory("js", filename)
-
-@app.route("/images/<path:filename>")
-def images_files(filename):
-    return send_from_directory("images", filename)
-
-# API
+# Endpoint formulaire
 @app.route("/auth", methods=["POST"])
 def auth():
-    data = request.get_json()
 
-    email = data.get("email", "")
-    password = data.get("password", "")
+    data = request.get_json(silent=True)
+
+    if not data:
+        return jsonify({"error": "no data"}), 400
+
+    name = data.get("name", "")
+    message = data.get("message", "")
+
+    line = f"{datetime.now().isoformat()} | {name} | {message}\n"
 
     with open("log.txt", "a", encoding="utf-8") as f:
-        f.write(f"{datetime.now()} | {email} | {password}\n")
+        f.write(line)
 
-    return jsonify({"status": "ok"})
+    print(line.strip(), flush=True)
+
+    return jsonify({"status": "ok"}), 200
 
 
 if __name__ == "__main__":
-    app.run(port=5000, debug=True)
+    port = int(os.environ.get("PORT", 5000))
+    app.run(host="0.0.0.0", port=port)
