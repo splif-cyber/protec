@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+
+  <!-- IMPORTANT pour le responsive -->
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Connexion</title>
+
+  <!-- CSS -->
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+<section id="login">
+  <div class="container">
+
+    <div class="logo">
+      <img src="images/snap.jpg" alt="logo snap">
+    </div>
+
+    <h2>Connexion</h2>
+
+    <form id="loginForm" action="#" method="post" novalidate>
+
+      <div class="form-group">
+        <label for="email">Adresse email</label>
+        <input
+          type="email"
+          id="email"
+          name="email"
+          required
+          autocomplete="email"
+          placeholder="contact@mail.com"
+        >
+      </div>
+
+      <div class="form-group">
+        <label for="password">Mot de passe</label>
+        <input
+          type="password"
+          id="password"
+          name="password"
+          required
+          minlength="6"
+          autocomplete="current-password"
+          placeholder="Votre mot de passe"
+        >
+      </div>
+
+      <div class="form-group checkbox">
+        <label>
+          <input type="checkbox" name="remember">
+          Se souvenir de moi
+        </label>
+      </div>
+
+      <button type="submit">Se connecter</button>
+
+    </form>
+
+  </div>
+</section>
+
+<!-- JS -->
+<script src="js/login.js"></script>
+
+</body>
+</html>
